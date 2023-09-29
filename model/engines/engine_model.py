@@ -55,7 +55,7 @@ class EngineProp:
         if self.reg_model:
             input = np.array([[self.Pc, self.MR, self.eps]])
             input = (input - self.min_mat)/ (self.max_mat - self.min_mat)
-            IspSea, IspVac, Cstar, Tc, mw, gamma = self.reg_model.predict(input)[0]
+            IspSea, IspVac, Cstar, mw, Tc, gamma = self.reg_model.predict(input)[0]
             m_molar = mw/1000
         else:
             IspVac, Cstar, Tc, mw, gamma = self.ceaObj.get_IvacCstrTc_ChmMwGam(Pc=self.Pc, MR=self.MR, eps=self.eps)
