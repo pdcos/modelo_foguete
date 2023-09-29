@@ -224,7 +224,10 @@ class interStageStructure():
         self.pressurizationTankMass = self.pressurizationTank.tankMass + self.pressurizationTank.gasMass
 
     def get_mass_from_area(self, area):
-        mass = 4.95 * (area ** 1.15)
+        if area < 0:
+            return float('nan')
+        else:
+            mass = 4.95 * (area ** 1.15)
         return mass
 
     

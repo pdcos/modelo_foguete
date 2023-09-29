@@ -3,7 +3,7 @@ import math
 try:
     from model.structure.payload_bay_structure import PayloadBayStructure
     from model.structure.stage_structure import interStageStructure
-    from model.engines.engine_modeling import EngineProp
+    from model.engines.engine_model import EngineProp
 except:
     from structure.payload_bay_structure import PayloadBayStructure
     from structure.stage_structure import interStageStructure
@@ -11,7 +11,7 @@ except:
 
 
 class RocketModel():
-    def __init__(self, upperEngineParams, firstEngineParams, payloadBayParams, upperStageStructureParams, firstStageStructureParams, deltaV_upperStage, deltaV_landing, deltaV_firstStage, nEnginesUpperStage, nEnignesFirstStage, reg_model=False):
+    def __init__(self, upperEngineParams, firstEngineParams, payloadBayParams, upperStageStructureParams, firstStageStructureParams, deltaV_upperStage, deltaV_landing, deltaV_firstStage, nEnginesUpperStage, nEnignesFirstStage, reg_model=False, cea_obj=False):
         self.upperEngineParams = upperEngineParams
         self.firstEngineParams = firstEngineParams
         self.payloadBayParams = payloadBayParams
@@ -25,6 +25,7 @@ class RocketModel():
         self.nEnginesUpperStage = nEnginesUpperStage
         self.nEnginesFirstStage = nEnignesFirstStage
         self.reg_model = reg_model
+        self.cea_obj = cea_obj
     
 
     def build_engines(self):
@@ -35,7 +36,8 @@ class RocketModel():
                                            nozzleDiam = self.upperEngineParams["nozzleDiam"],
                                            eps = self.upperEngineParams["eps"],
                                            verbose=False,
-                                           reg_model=self.reg_model)
+                                           reg_model=self.reg_model,
+                                           cea_obj=self.cea_obj)
         self.firstStageEngine = EngineProp(#fuelName = self.firstEngineParams["fuelName"],
                                            #oxName = self.firstEngineParams["oxName"],
                                            Pc = self.firstEngineParams["combPressure"],
@@ -43,7 +45,8 @@ class RocketModel():
                                            nozzleDiam = self.firstEngineParams["nozzleDiam"],
                                            eps = self.firstEngineParams["eps"],
                                            verbose=False,
-                                           reg_model=self.reg_model)
+                                           reg_model=self.reg_model,
+                                           cea_obj=self.cea_obj)
         
         self.upperStageEngine.estimate_all()
         self.firstStageEngine.estimate_all()
@@ -190,57 +193,99 @@ class RocketModel():
 if __name__ == "__main__":
     import joblib
     import time
+    from rocketcea.cea_obj_w_units import CEA_Obj
 
     reg_path = '/Users/pdcos/Documents/Estudos/Mestrado/Tese/Implementação da Tese do Jentzsch/rocket_optimization_implementation/model/engines/decision_tree_model.pkl'
     reg_model = joblib.load(reg_path)
+    reg_model = False
+    cea_obj = ceaObj = CEA_Obj( oxName='LOX', fuelName='RP-1', pressure_units='MPa', cstar_units='m/s', temperature_units='K')
 
-    engineParams = {#"oxName": "LOX",
-                    #"fuelName": "RP-1",
-                    "combPressure": 11.5 * 1e6,
-                    "MR": 2.8,
-                    "nozzleDiam": 0.23125,
-                    "eps": 180}
 
-    engineParamsFirst = {#"oxName": "LOX",
-                    #"fuelName": "RP-1",
-                    "combPressure": 11.5 * 1e6,
-                    "MR": 2.8,
-                    "nozzleDiam": 0.23125,
-                    "eps": 25}
+    # engineParams = {"oxName": "LOX",
+    #                 "fuelName": "RP-1",
+    #                 "combPressure": 11.5 * 1e6,
+    #                 "MR": 2.8,
+    #                 "nozzleDiam": 0.23125,
+    #                 "eps": 180}
+
+    # engineParamsFirst = {"oxName": "LOX",
+    #                 "fuelName": "RP-1",
+    #                 "combPressure": 11.5 * 1e6,
+    #                 "MR": 2.8,
+    #                 "nozzleDiam": 0.23125,
+    #                 "eps": 25}
+
+    # payloadBayParams = {"payloadHeight": 6.7,
+    #                     "payloadRadius": 4.6/2,
+    #                     "payloadMass": 7500,
+    #                     "lowerStageRadius": 2.1,
+    #                     "lowerRocketSurfaceArea": 0} # 0 porque ainda nao temos esse valor
+
+    # upperStageStructureParams = {"oxName": "LOX",
+    #                              "fuelName": "RP1",
+    #                              "MR": 2.8,
+    #                              "tankPressure": 0.1,
+    #                              "radius": 2.1,
+    #                             } # 0 porque ainda nao temos esse valor
+    # lowerStageStructureParams = {"oxName": "LOX",
+    #                             "fuelName": "RP1",
+    #                             "MR": 2.8,
+    #                             "tankPressure": 0.1,
+    #                             "radius": 2.8,
+    #                         } # 0 porque ainda nao temos esse valor
+
+
+    engineParams = {"oxName": "LOX",
+                    "fuelName": "RP-1",
+                    "combPressure": 3.96769844e6,
+                    "MR": 4.31244790,
+                    "nozzleDiam": 4.31920087e-1,
+                    "eps": 8.40074954e1}
+
+    engineParamsFirst = {"oxName": "LOX",
+                    "fuelName": "RP-1",
+                    "combPressure": 2.44865031e6,
+                    "MR": 5.28717125,
+                    "nozzleDiam": 4.15087055e-1,
+                    "eps": 1.03948044e2}
 
     payloadBayParams = {"payloadHeight": 6.7,
                         "payloadRadius": 4.6/2,
-                        "payloadMass": 7500,
-                        "lowerStageRadius": 2.1,
+                        "payloadMass": 4850,
+                        "lowerStageRadius": 9.50135280,
                         "lowerRocketSurfaceArea": 0} # 0 porque ainda nao temos esse valor
 
     upperStageStructureParams = {"oxName": "LOX",
                                  "fuelName": "RP1",
-                                 "MR": 2.8,
+                                 "MR": 4.31244790,
                                  "tankPressure": 0.1,
-                                 "radius": 2.1,
+                                 "radius": 9.50135280,
                                 } # 0 porque ainda nao temos esse valor
     lowerStageStructureParams = {"oxName": "LOX",
                                 "fuelName": "RP1",
-                                "MR": 2.8,
+                                "MR": 5.28717125,
                                 "tankPressure": 0.1,
-                                "radius": 2.8,
+                                "radius": 6.27899536,
                             } # 0 porque ainda nao temos esse valor
+
     time_start = time.time()
-    for i in range(1000):
+    for i in range(1):
         rocket_model = RocketModel(upperEngineParams=engineParams,
                                 firstEngineParams=engineParamsFirst,
                                 payloadBayParams=payloadBayParams,
                                 upperStageStructureParams=upperStageStructureParams,
                                 firstStageStructureParams = lowerStageStructureParams,
-                                deltaV_upperStage=8000,
+                                deltaV_upperStage=9000,
                                 deltaV_landing=2000,
-                                deltaV_firstStage=4000,
+                                deltaV_firstStage=3000,
                                 nEnginesUpperStage=1,
-                                nEnignesFirstStage=10,
-                                reg_model=reg_model)
+                                nEnignesFirstStage=9,
+                                reg_model=reg_model,
+                                cea_obj=cea_obj,
+                                )
 
         rocket_model.build_all()
+        rocket_model.print_all_parameters()
     time_end = time.time()
     print(f'Tempo: {time_end - time_start}')
     #rocket_model.print_all_parameters()
