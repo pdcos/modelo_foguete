@@ -43,6 +43,9 @@ class PSO():
         self.f_g_best_alltime = 0
         self.neighborhood_mode = neighborhood_mode
 
+        self.fitness_calls_counter = 0
+        self.fitness_calls_list = np.zeros(self.num_epochs)
+
         self.phi = self.global_factor + self.local_factor
         self.K = 2.0/(np.abs(2-self.phi - np.sqrt((self.phi**2)-(4*self.phi))))
 
@@ -69,6 +72,8 @@ class PSO():
     
     def calculate_fitness(self):
         self.f_x_i = self.fitness_func(self.x_i).copy()
+        # Increment fitness calls counter
+        self.fitness_calls_counter += 1
 
     def update_gbest(self):
         curr_max = self.f_x_i.max()
@@ -128,6 +133,7 @@ class PSO():
         mean_val = np.mean(self.f_x_i)
         self.best_ind_list[self.curr_epoch] = max_val
         self.avg_ind_list[self.curr_epoch] = mean_val
+        self.fitness_calls_list[self.curr_epoch] = self.fitness_calls_counter
         if (self.curr_epoch % self.eval_every == 0) and self.verbose != 0 :
             print(f"Epoch {self.curr_epoch}: Best: {max_val}, Average: {mean_val}")
 

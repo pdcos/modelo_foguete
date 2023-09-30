@@ -15,7 +15,7 @@ from rocketcea.cea_obj_w_units import CEA_Obj
 #### GLOBAL PARAMETERS ####
 reg_path = '/Users/pdcos/Documents/Estudos/Mestrado/Tese/Implementação da Tese do Jentzsch/rocket_optimization_implementation/model/engines/decision_tree_model.pkl'
 reg_model = joblib.load(reg_path)
-reg_model = False
+#reg_model = False
 cea_obj = ceaObj = CEA_Obj( oxName='LOX', fuelName='RP-1', pressure_units='MPa', cstar_units='m/s', temperature_units='K')
 
 
