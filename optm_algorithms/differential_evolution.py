@@ -37,6 +37,9 @@ class DifferentialEvolutionAlgorithm():
         self.best_solution_fitness = 0
         self.best_solution = 0
 
+        self.fitness_calls_counter = 0
+        self.fitness_calls_list = np.zeros(self.num_epochs)
+
         np.random.seed(seed=seed)
 
     def init_pop(self):
@@ -73,8 +76,10 @@ class DifferentialEvolutionAlgorithm():
         return
 
     def selection(self):
-        self.fitness_x_g = self.fitness_func(self.x_g)
-        self.fitness_u_g = self.fitness_func(self.u_g)
+        self.fitness_x_g = self.fitness_func(self.x_g, self.value_ranges)
+        self.fitness_u_g = self.fitness_func(self.u_g, self.value_ranges)
+        self.fitness_calls_counter += 2
+
         replacement_indices = self.fitness_u_g > self.fitness_x_g
         self.x_g[replacement_indices] = self.u_g[replacement_indices]
         self.fitness_x_g[replacement_indices] = self.fitness_u_g[replacement_indices]
@@ -90,6 +95,8 @@ class DifferentialEvolutionAlgorithm():
         mean_val = np.mean(self.fitness_x_g)
         self.best_ind_list[self.curr_epoch] = max_val
         self.avg_ind_list[self.curr_epoch] = mean_val
+        self.avg_ind_list[self.curr_epoch] = mean_val
+        self.fitness_calls_list[self.curr_epoch] = self.fitness_calls_counter
         if (self.curr_epoch % self.eval_every == 0) and self.verbose != 0 :
             print(f"Epoch {self.curr_epoch}: Best: {max_val}, Average: {mean_val}")
     
