@@ -67,6 +67,8 @@ class OptAiNet():
         self.previous_memory_cells_quantity = 0
         self.has_converged = False
 
+        self.fitness_calls_counter = 0
+        self.fitness_calls_list = np.zeros(self.num_epochs)
 
         # self.init_pop()
         # self.fitness_evaluation()
@@ -90,6 +92,7 @@ class OptAiNet():
     
     def fitness_evaluation(self):
         self.f_pop = self.fitness_func(self.pop, self.value_ranges)
+        self.fitness_calls_counter += 1
         self.curr_f_max = self.f_pop.max()
         self.curr_f_min = self.f_pop.min()
 
@@ -239,6 +242,7 @@ class OptAiNet():
         mean_val = np.mean(self.f_pop)
         self.best_ind_list[self.curr_epoch] = max_val
         self.avg_ind_list[self.curr_epoch] = mean_val
+        self.fitness_calls_list[self.curr_epoch] = self.fitness_calls_counter
         if (self.curr_epoch % self.eval_every == 0) and self.verbose != 0 :
             print(f"Epoch {self.curr_epoch}: Best: {max_val}, Average: {mean_val}")
 

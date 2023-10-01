@@ -95,7 +95,6 @@ class DifferentialEvolutionAlgorithm():
         mean_val = np.mean(self.fitness_x_g)
         self.best_ind_list[self.curr_epoch] = max_val
         self.avg_ind_list[self.curr_epoch] = mean_val
-        self.avg_ind_list[self.curr_epoch] = mean_val
         self.fitness_calls_list[self.curr_epoch] = self.fitness_calls_counter
         if (self.curr_epoch % self.eval_every == 0) and self.verbose != 0 :
             print(f"Epoch {self.curr_epoch}: Best: {max_val}, Average: {mean_val}")
