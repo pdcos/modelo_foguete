@@ -55,6 +55,8 @@ class DEPSO():
         self.best_solution_fitness = 0
         self.best_solution = 0
 
+        self.fitness_calls_counter = 0
+        self.fitness_calls_list = np.zeros(self.num_epochs)
 
         self.min_mat = self.value_ranges.T[0, :]
         self.max_mat = self.value_ranges.T[1,:]
@@ -82,6 +84,7 @@ class DEPSO():
         self.v_i = np.random.rand(self.pop_size, self.chrom_length)
         self.v_i = self.v_i * (2 * self.v_max) - self.v_max
         self.f_x_i = self.fitness_func(self.x_i, self.value_ranges)
+        self.fitness_calls_counter += 1
         self.f_gbest = self.f_x_i.max()
         #self.gbest = self.x_i[self.f_x_i == self.f_x_i.max()].squeeze(axis=0)
         self.gbest = self.x_i[self.f_x_i == self.f_x_i.max()]
@@ -93,6 +96,7 @@ class DEPSO():
         self.f_x_i = self.fitness_func(self.x_i, self.value_ranges).copy()
         #self.f_x_i = self.fitness_func(self.x_i, self.value_ranges)
         self.f_u_g = self.fitness_func(self.u_g, self.value_ranges).copy()
+        self.fitness_calls_counter += 2
 
         curr_max_fitness = self.f_x_i.max()
         if self.best_solution_fitness < curr_max_fitness:
@@ -205,6 +209,8 @@ class DEPSO():
         mean_val = np.mean(self.f_x_i)
         self.best_ind_list[self.curr_epoch] = max_val
         self.avg_ind_list[self.curr_epoch] = mean_val
+        self.avg_ind_list[self.curr_epoch] = mean_val
+        self.fitness_calls_list[self.curr_epoch] = self.fitness_calls_counter
         if (self.curr_epoch % self.eval_every == 0) and self.verbose != 0 :
             print(f"Epoch {self.curr_epoch}: Best: {max_val}, Average: {mean_val}")
 
