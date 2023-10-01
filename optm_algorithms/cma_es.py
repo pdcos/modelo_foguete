@@ -44,6 +44,10 @@ class CMA_ES():
         self.eval_every = eval_every
         self.verbose = verbose
 
+        self.fitness_calls_counter = 0
+        self.fitness_calls_list = np.zeros(self.num_epochs)
+
+
         self.min_mat = self.value_ranges.T[0, :]
         self.max_mat = self.value_ranges.T[1,:]
 
@@ -56,6 +60,7 @@ class CMA_ES():
         self.x_i = self.x_i[~rows_to_delete]
 
         self.f_x_i = self.fitness_func(self.x_i, self.value_ranges)
+        self.fitness_calls_counter += 1
 
         mask = (-self.f_x_i).argsort()
         self.f_x_i = self.f_x_i[mask]
@@ -86,6 +91,8 @@ class CMA_ES():
         mean_val = np.mean(self.f_x_i)
         self.best_ind_list[self.curr_epoch] = max_val
         self.avg_ind_list[self.curr_epoch] = mean_val
+        self.avg_ind_list[self.curr_epoch] = mean_val
+        self.fitness_calls_list[self.curr_epoch] = self.fitness_calls_counter
         if (self.curr_epoch % self.eval_every == 0) and self.verbose != 0 :
             print(f"Epoch {self.curr_epoch}: Best: {max_val}, Average: {mean_val}")
 
