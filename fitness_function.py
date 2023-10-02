@@ -127,7 +127,7 @@ def fitness_func(parameters_list):
     return fitness
 
 class RocketFitness():
-    def __init__(self, bound_values, parallel=True):
+    def __init__(self, bound_values, num_workers=1):
         self.best_fitness = 1
         self.worst_fitness = -1
 
@@ -138,10 +138,7 @@ class RocketFitness():
         self.min_mat = bound_values.T[0, :]
         self.max_mat = bound_values.T[1,:]
 
-        if parallel:
-            self.num_workers = os.cpu_count()
-        else:
-            self.num_workers = 1
+        self.num_workers = num_workers  
 
 
 
@@ -193,11 +190,11 @@ if __name__ == "__main__":
     #print(fit)
 
     fit_class = RocketFitness(bound_values, parallel=True)
-    random_values = np.random.rand(10000,10)
+    random_values = np.random.rand(1000,10)
     #random_values = np.array([random_values[6]])
     start_time = time.time()
     x = fit_class.calc_fitness(random_values)
     print("--- %s seconds ---" % (time.time() - start_time))
-    print(x)
+    #print(x)
 
 
