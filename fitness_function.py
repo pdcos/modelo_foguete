@@ -143,7 +143,7 @@ class RocketFitness():
 
 
 
-    def calc_fitness(self, params_matrix):
+    def calc_fitness(self, params_matrix, values_ranges=False):
         pop = params_matrix * (self.max_mat - self.min_mat) + self.min_mat
         # with concurrent.futures.ThreadPoolExecutor(max_workers=self.num_workers) as executor:
         #     futures = [executor.submit(fitness_func, x) for x in pop]
