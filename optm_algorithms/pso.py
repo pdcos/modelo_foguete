@@ -148,7 +148,8 @@ class PSO():
             self.update_speed()
             self.update_position()
             self.callback()
-        print("--- %s seconds ---" % (time.time() - start_time))
+        self.total_exec_time = time.time() - start_time
+        print("--- %s seconds ---" % (self.total_exec_time))
         return self.pbest
 
     def plot(self):
