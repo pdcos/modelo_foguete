@@ -10,18 +10,16 @@ import warnings
 from tqdm import tqdm
 import json
 
-
 rocket_fitness = RocketFitness(bound_values, num_workers=4)
 random_values = np.random.rand(10,10)
 fitness_func_class = rocket_fitness.calc_fitness
-
 
 global_factor_list = np.linspace(1.05, 3.05, 3)
 local_factor_list = np.linspace(1.05, 3.05, 3)
 v_max = np.linspace(1,8,3)
 
 mutation_rate = np.linspace(0.2, 0.9, 3)
-crossover_rate = np.linspace(0.2, .9,3)
+crossover_rate = np.linspace(0.2, 1, 3)
 
 grid1, grid2, grid3, grid4, grid5 = np.meshgrid(global_factor_list, local_factor_list, v_max, mutation_rate, crossover_rate)
 
@@ -31,11 +29,8 @@ sum_of_columns = combinations[:, 0] + combinations[:, 1]
 # Use logical indexing to select rows where the sum of the first and second columns is greater than 4
 combinations = combinations[sum_of_columns > 4]
 
-
 def execute_sensitivity_analysis_depso(combinations, filename):
     
-    #combinations = [[0.5, 0,5, 0.5, 0.5, 0.5]]
-
     simulations_list = []
     for row in tqdm(combinations):
         
@@ -46,7 +41,7 @@ def execute_sensitivity_analysis_depso(combinations, filename):
         crossover_rate = row[4]
         
         depso = DEPSO(
-            num_epochs=5,
+            num_epochs=100,
             pop_size=1000,
             chrom_length=10,
             n_best=2,
@@ -58,7 +53,7 @@ def execute_sensitivity_analysis_depso(combinations, filename):
             fitness_func=fitness_func_class,
             neighborhood_mode='self',
             verbose=True,
-            eval_every=2,
+            eval_every=100,
             crossover_rate = crossover_rate,
             mutation_rate = mutation_rate,
             seed=1
@@ -87,3 +82,4 @@ def execute_sensitivity_analysis_depso(combinations, filename):
 
 if __name__ == '__main__':
     execute_sensitivity_analysis_depso(combinations, 'simulations/depso_sensitivity.json')
+    
