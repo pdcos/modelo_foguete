@@ -21,6 +21,7 @@ class DEPSO():
                  v_max: float,
                  value_ranges:list,
                  crossover_rate:float,
+                 mutation_rate: float,
                  fitness_func, # Function Type,
                  seed=42,
                  eval_every=100,
@@ -37,6 +38,7 @@ class DEPSO():
         self.global_factor = global_factor
         self.speed_factor = speed_factor
         self.crossover_rate = crossover_rate
+        self.mutation_rate = mutation_rate
         self.v_max = v_max
         self.value_ranges = np.array(value_ranges)
         self.fitness_func = fitness_func
@@ -179,7 +181,7 @@ class DEPSO():
         mut_idx_3 = np.random.randint(low=0, high=self.pop_size, size=self.pop_size)
         mut_idx_4 = np.random.randint(low=0, high=self.pop_size, size=self.pop_size)
         self.delta = ((self.x_i[mut_idx_1] - self.x_i[mut_idx_2]) + (self.x_i[mut_idx_3] - self.x_i[mut_idx_4]) )/2
-        self.v_g = self.x_i + self.delta
+        self.v_g = self.x_i + (self.delta * self.mutation_rate )
         mask = self.v_g > 1
         self.v_g[mask] = 1
         mask = self.v_g < 0
@@ -229,7 +231,8 @@ class DEPSO():
             self.selection()
             self.calculate_fitness()
             self.callback()
-        print("--- %s seconds ---" % (time.time() - start_time))
+        self.total_exec_time = time.time() - start_time
+        print("--- %s seconds ---" % (self.total_exec_time))
         return self.pbest
 
     def plot(self):
