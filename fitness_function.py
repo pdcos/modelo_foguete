@@ -13,7 +13,8 @@ from rocketcea.cea_obj_w_units import CEA_Obj
 
 
 #### GLOBAL PARAMETERS ####
-reg_path = '/Users/pdcos/Documents/Estudos/Mestrado/Tese/Implementação da Tese do Jentzsch/rocket_optimization_implementation/model/engines/decision_tree_model.pkl'
+#reg_path = '/Users/pdcos/Documents/Estudos/Mestrado/Tese/Implementação da Tese do Jentzsch/rocket_optimization_implementation/model/engines/decision_tree_model.pkl'
+reg_path = '/home/ubuntu/Mestrado/modelo_foguete/model/engines/decision_tree_model.pkl'
 reg_model = joblib.load(reg_path)
 #reg_model = False
 cea_obj = ceaObj = CEA_Obj( oxName='LOX', fuelName='RP-1', pressure_units='MPa', cstar_units='m/s', temperature_units='K')
@@ -189,7 +190,7 @@ if __name__ == "__main__":
     #fit = fitness_func(params_list)
     #print(fit)
 
-    fit_class = RocketFitness(bound_values, parallel=True)
+    fit_class = RocketFitness(bound_values, num_workers=4)
     random_values = np.random.rand(1000,10)
     #random_values = np.array([random_values[6]])
     start_time = time.time()

@@ -195,7 +195,8 @@ if __name__ == "__main__":
     import time
     from rocketcea.cea_obj_w_units import CEA_Obj
 
-    reg_path = '/Users/pdcos/Documents/Estudos/Mestrado/Tese/Implementação da Tese do Jentzsch/rocket_optimization_implementation/model/engines/decision_tree_model.pkl'
+    #reg_path = '/Users/pdcos/Documents/Estudos/Mestrado/Tese/Implementação da Tese do Jentzsch/rocket_optimization_implementation/model/engines/decision_tree_model.pkl'
+    reg_path = '/home/ubuntu/Mestrado/modelo_foguete/model/engines/decision_tree_model.pkl'
     reg_model = joblib.load(reg_path)
     reg_model = False
     cea_obj = ceaObj = CEA_Obj( oxName='LOX', fuelName='RP-1', pressure_units='MPa', cstar_units='m/s', temperature_units='K')
@@ -269,7 +270,7 @@ if __name__ == "__main__":
                             } # 0 porque ainda nao temos esse valor
 
     time_start = time.time()
-    for i in range(1):
+    for i in range(1000):
         rocket_model = RocketModel(upperEngineParams=engineParams,
                                 firstEngineParams=engineParamsFirst,
                                 payloadBayParams=payloadBayParams,
