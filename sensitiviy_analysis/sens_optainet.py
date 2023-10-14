@@ -1,0 +1,80 @@
+import sys
+sys.path.append('../')
+from optm_algorithms.pso import PSO
+from optm_algorithms.differential_evolution import DifferentialEvolutionAlgorithm
+from optm_algorithms.depso import DEPSO
+from optm_algorithms.opt_ai_net import OptAiNet
+
+from fitness_function import RocketFitness, bound_values, fitness_func
+import numpy as np
+import warnings
+from tqdm import tqdm
+import json
+
+rocket_fitness = RocketFitness(bound_values, num_workers=4)
+random_values = np.random.rand(10,10)
+fitness_func_class = rocket_fitness.calc_fitness
+
+nc_list = np.array([2, 4, 8])
+beta_list = np.array([10,100,1000])
+clone_threshold_list = np.linspace(0.05, 0.15, 3)
+supression_threshold_list = np.linspace(0.05, 0.5, 4)
+newcomers_percentage_list = np.linspace(0.1, 0.5, 5)
+
+grid1, grid2, grid3, grid4, grid5 = np.meshgrid(nc_list, beta_list, clone_threshold_list, supression_threshold_list, newcomers_percentage_list)
+combinations = np.vstack((grid1.ravel(), grid2.ravel(), grid3.ravel(), grid4.ravel(), grid5.ravel())).T
+
+print(combinations.shape)
+
+def execute_sensitivity_analysis_optainet(combinations, filename):
+    
+    simulations_list = []
+    for row in tqdm(combinations):
+        
+        nc = int(row[0])
+        beta = row[1]
+        clone_threshold = row[2]
+        supression_threshold = row[3]
+        newcomers_percentage = row[4]
+        
+        opt_ai_net = OptAiNet( 
+                        num_epochs=100,
+                        pop_size=1000,
+                        Nc=nc,
+                        chrom_length=10,
+                        clone_threshold=clone_threshold,
+                        supression_threshold=supression_threshold,
+                        newcomers_percentage=newcomers_percentage,
+                        beta=beta,
+                        value_ranges=bound_values,
+                        fitness_func=fitness_func_class,
+                        verbose=True,
+                        eval_every=10,
+                        limit_fitness_calls= 1000 * 4 * 100
+        )
+
+        best_solutions = opt_ai_net.fit()
+
+        dict_save = {'nc': nc,
+                    'beta': beta,
+                    'clone_threshold': clone_threshold,
+                    'supression_threshold': supression_threshold,
+                    'newcomers_percentage': newcomers_percentage,
+                    'fitness_calls': opt_ai_net.fitness_calls_list.tolist(),
+                    'best_ind_list': opt_ai_net.best_ind_list.tolist(),
+                    'avg_ind_list': opt_ai_net.avg_ind_list.tolist(),
+                    'best_solutions': best_solutions.tolist(),
+                    'total_time': opt_ai_net.total_exec_time,
+                    }
+        
+        simulations_list.append(dict_save)
+        
+    with open(filename, 'w') as fout:
+        json.dump(simulations_list, fout)
+
+    return
+
+
+if __name__ == '__main__':
+    execute_sensitivity_analysis_optainet(combinations, 'simulations/optainet_sensitivity.json')
+    
