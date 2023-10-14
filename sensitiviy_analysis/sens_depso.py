@@ -53,7 +53,7 @@ def execute_sensitivity_analysis_depso(combinations, filename):
             fitness_func=fitness_func_class,
             neighborhood_mode='self',
             verbose=True,
-            eval_every=100,
+            eval_every=99,
             crossover_rate = crossover_rate,
             mutation_rate = mutation_rate,
             seed=1
