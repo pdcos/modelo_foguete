@@ -26,7 +26,8 @@ class OptAiNet():
                  seed=42,
                  eval_every=100,
                  verbose = 0,
-                 maintain_history = False
+                 maintain_history = False,
+                 limit_fitness_calls = np.inf
                 ):
         
         self.num_epochs = num_epochs
@@ -69,6 +70,7 @@ class OptAiNet():
 
         self.fitness_calls_counter = 0
         self.fitness_calls_list = np.zeros(self.num_epochs)
+        self.limit_fitness_calls = limit_fitness_calls
 
         # self.init_pop()
         # self.fitness_evaluation()
@@ -92,7 +94,7 @@ class OptAiNet():
     
     def fitness_evaluation(self):
         self.f_pop = self.fitness_func(self.pop, self.value_ranges)
-        self.fitness_calls_counter += 1
+        self.fitness_calls_counter += 1 * len(self.pop) 
         self.curr_f_max = self.f_pop.max()
         self.curr_f_min = self.f_pop.min()
 
@@ -121,7 +123,9 @@ class OptAiNet():
         self.memory_cell_history.append(memory_denorm)
         clone_denorm = self.pop * (self.max_mat - self.min_mat) + self.min_mat
         self.clone_history.append(clone_denorm)
-        #print(self.pop.shape)
+        print(f"Tamanho da populacao: {self.pop.shape[0]}")
+        print(f"Iterações: {self.fitness_calls_counter} / {self.limit_fitness_calls}")
+
 
 
     def mutation(self):
@@ -259,6 +263,8 @@ class OptAiNet():
                 self.mutation()
                 self.fitness_evaluation()
                 self.evaluation()
+                if self.fitness_calls_counter >= self.limit_fitness_calls:
+                    break
             self.continue_clone = True
             self.f_pop_avg_previous = 0
             self.supress_cells_2()
@@ -269,7 +275,10 @@ class OptAiNet():
             #     break
             self.add_newcomers()
             self.fitness_evaluation()
-        print("--- %s seconds ---" % (time.time() - start_time))
+            if self.fitness_calls_counter >= self.limit_fitness_calls:
+                break
+        self.total_exec_time = time.time() - start_time
+        print("--- %s seconds ---" % (self.total_exec_time))
         return self.best_ind
 
     def plot(self):
