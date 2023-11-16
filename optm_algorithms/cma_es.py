@@ -101,7 +101,8 @@ class CMA_ES():
             self.curr_epoch = epoch
             self.step()
             self.callback()
-        print("--- %s seconds ---" % (time.time() - start_time))
+        self.total_exec_time = time.time() - start_time
+        print("--- %s seconds ---" % (self.total_exec_time))
         return self.best_indvs
 
     def plot(self):
