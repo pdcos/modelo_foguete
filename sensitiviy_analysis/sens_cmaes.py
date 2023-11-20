@@ -26,31 +26,43 @@ def execute_sensitivity_analysis_cmaes(combinations, filename):
     
     simulations_list = []
     for row in tqdm(combinations):
-        mi = int(row[0])
-        sigma = row[1]
-        
-        cmaes = CMA_ES(
-            num_epochs=100,
-            lamb=1000,
-            mi=mi,
-            chrom_length=10,
-            value_ranges=bound_values,
-            fitness_func=fitness_func_class,
-            eval_every=99,
-            verbose=True,
-            sigma=sigma
-        )
-        best_solutions = cmaes.fit()
+        try:
+            mi = int(row[0])
+            sigma = row[1]
+            
+            cmaes = CMA_ES(
+                num_epochs=100,
+                lamb=1000,
+                mi=mi,
+                chrom_length=10,
+                value_ranges=bound_values,
+                fitness_func=fitness_func_class,
+                eval_every=99,
+                verbose=True,
+                sigma=sigma
+            )
+            best_solutions = cmaes.fit()
 
-        dict_save = {'mi': mi,
-                     'sigma': sigma,
-                     'fitness_calls': cmaes.fitness_calls_list.tolist(),
-                     'best_ind_list': cmaes.best_ind_list.tolist(),
-                     'avg_ind_list': cmaes.avg_ind_list.tolist(),
-                     'best_solutions': best_solutions.tolist(),
-                     'total_time': cmaes.total_exec_time,
-                     }
-        simulations_list.append(dict_save)
+            dict_save = {'mi': mi,
+                        'sigma': sigma,
+                        'fitness_calls': cmaes.fitness_calls_list.tolist(),
+                        'best_ind_list': cmaes.best_ind_list.tolist(),
+                        'avg_ind_list': cmaes.avg_ind_list.tolist(),
+                        'best_solutions': best_solutions.tolist(),
+                        'total_time': cmaes.total_exec_time,
+                        }
+            simulations_list.append(dict_save)
+        except Exception as e:
+            print(f"Erro -> {e}")
+            dict_save = {'mi': mi,
+                        'sigma': sigma,
+                        'fitness_calls': "ERRO",
+                        'best_ind_list': "ERRO",
+                        'avg_ind_list': "ERRO",
+                        'best_solutions': "ERRO",
+                        'total_time': "ERRO",
+                        }
+            simulations_list.append(dict_save)
         
     with open(filename, 'w') as fout:
         json.dump(simulations_list, fout)
