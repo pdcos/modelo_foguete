@@ -25,35 +25,38 @@ class CMA_ES():
         self.N = chrom_length
         self.x_mean = np.array([0.5] * self.N)
         self.lamb = lamb
-        self.sigma = sigma # Step size
-        self.mi = mi # Number of best candidates
+        self.sigma = sigma  # Step size
+        self.mi = mi  # Number of best candidates
         self.C = np.identity(self.N)
         self.fitness_func = fitness_func
         self.value_ranges = value_ranges
-        #self.sigma = np.expand_dims(np.random.rand(self.N), axis=1).T
-        self.C = np.identity(self.N)
-        self.cov_mat = (self.sigma ** 2) * self.C
-        self.weights = np.log(self.mi+1/2)-np.log(range(1, self.mi + 1))
-        self.weights = self.weights/self.weights.sum()
+        self.weights = np.log(self.mi + 0.5) - np.log(np.arange(1, self.mi + 1))
+        self.weights = self.weights / self.weights.sum()
         self.maintain_history = maintain_history
         self.x_i_history = []
 
+        # Adicionando o caminho de evolução
+        self.p_sigma = np.zeros(self.N)  # Caminho de evolução para o tamanho do passo
 
+        # Parâmetros para adaptação do tamanho do passo
+        self.c_sigma = 0.3 / self.N  # Taxa de mudança para p_sigma
+        self.d_sigma = 1  # Fator de ajuste para o tamanho do passo
+
+        # Outras variáveis
         self.best_ind_list = np.zeros(self.num_epochs)
         self.avg_ind_list = np.zeros(self.num_epochs)
         self.eval_every = eval_every
         self.verbose = verbose
-
         self.fitness_calls_counter = 0
         self.fitness_calls_list = np.zeros(self.num_epochs)
-
-
         self.min_mat = self.value_ranges.T[0, :]
         self.max_mat = self.value_ranges.T[1,:]
 
 
     def step(self):
-        self.x_i = np.random.multivariate_normal(self.x_mean, self.cov_mat, size=self.lamb)
+        # Amostragem da população
+        self.x_i = np.random.multivariate_normal(self.x_mean, (self.sigma ** 2) * self.C, size=self.lamb)
+
         rows_to_delete = np.any(self.x_i > 1, axis=1)
         self.x_i = self.x_i[~rows_to_delete]
         rows_to_delete = np.any(self.x_i < 0, axis=1)
@@ -77,10 +80,13 @@ class CMA_ES():
         #for i in range(self.mi):
         #    p_sigma += self.weights[i] * (self.best_indvs[i] - self.x_mean) / self.sigma
         #print(p_sigma)
-        p_sigma= np.sum(self.weights[:, np.newaxis] * (self.best_indvs - self.x_mean) / self.sigma, axis=0)
-        #print(p_sigma_2)
-        p_sigma /= np.linalg.norm(p_sigma)
-        self.sigma *= np.exp((np.linalg.norm(p_sigma) - 1) / self.N)
+        # Atualização de p_sigma
+        weighted_sum = np.sum(self.weights[:, np.newaxis] * (self.best_indvs - self.x_mean) / self.sigma, axis=0)
+        self.p_sigma = (1 - self.c_sigma) * self.p_sigma + np.sqrt(1 - (1 - self.c_sigma) ** 2) * np.sqrt(self.mi) * weighted_sum
+        self.x_mean = np.dot(self.weights, self.best_indvs)
+        
+        # Adaptação do tamanho do passo
+        self.sigma *= np.exp((np.linalg.norm(self.p_sigma) - np.sqrt(self.N)) / (self.d_sigma * np.sqrt(self.N)))
 
         if self.maintain_history:
             particle = self.x_i * (self.max_mat - self.min_mat) + self.min_mat
