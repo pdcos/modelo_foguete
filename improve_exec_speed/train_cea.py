@@ -21,6 +21,9 @@ from sklearn.metrics import mean_squared_error
 from joblib import dump
 import json
 
+from sklearn.multioutput import MultiOutputRegressor
+
+
 class Trainer:
     def __init__(self, model_name, data_path):
         self.model_name = model_name
@@ -89,6 +92,24 @@ class Trainer:
         self.hiperparametros = grid_search.best_params_
         self.model = grid_search.best_estimator_
 
+    def svr_regressor(self):
+        # Treina o modelo com grid search
+        self.model = MultiOutputRegressor(SVR())
+        parameters = {
+            'estimator__kernel': ['rbf', 'linear'],
+            'estimator__C': [1, 10, 100],
+            'estimator__gamma': ['scale', 'auto'],
+            'estimator__max_iter': [1000]  # Limita o número de iterações
+        }
+
+        # Grid Search com validação cruzada
+        np.random.seed(42)
+        grid_search = GridSearchCV(self.model, parameters, cv=5, scoring='neg_mean_squared_error', n_jobs=-1, verbose=3)
+        grid_search.fit(self.X_train, self.y_train)
+
+        # Melhores hiperparâmetros
+        self.hiperparametros = grid_search.best_params_
+        self.model = grid_search.best_estimator_
 
 
     def test_model(self):
@@ -131,6 +152,8 @@ class Trainer:
             self.regression_tree()
         elif self.model_name == 'mlp_regressor':
             self.mlp_regressor()
+        elif self.model_name == 'svr_regressor':
+            self.svr_regressor()
         self.train_time = time.time() - self.train_time
         print("Tempo de treino: ", self.train_time)
         self.inference_time = time.time()
