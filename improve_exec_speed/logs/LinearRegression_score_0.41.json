@@ -1,0 +1,1 @@
+{"model_name": "linear_regression", "train_time": 0.16558337211608887, "inference_time": 0.07891082763671875, "inference_samples": 200000, "hiperparametros": null, "mse": 47679.83691594737, "score": 0.40874661230950676}

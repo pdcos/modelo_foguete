@@ -1,0 +1,1 @@
+{"model_name": "svr_regressor", "train_time": 44756.11434483528, "inference_time": 1758.7435936927795, "inference_samples": 200000, "hiperparametros": {"estimator__C": 100, "estimator__gamma": "scale", "estimator__kernel": "rbf", "estimator__max_iter": 10000}, "mse": 1101.9607181957178, "score": 0.8217436128927523}

@@ -1,0 +1,1 @@
+{"model_name": "mlp_regressor", "train_time": 4956.723415851593, "inference_time": 0.46695566177368164, "inference_samples": 200000, "hiperparametros": {"hidden_layer_sizes": [64, 64, 64]}, "mse": 23.7563830863453, "score": 0.9111920847233065}
