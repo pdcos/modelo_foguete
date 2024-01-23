@@ -198,76 +198,76 @@ if __name__ == "__main__":
     #reg_path = '/Users/pdcos/Documents/Estudos/Mestrado/Tese/Implementação da Tese do Jentzsch/rocket_optimization_implementation/model/engines/decision_tree_model.pkl'
     reg_path = '/home/ubuntu/Mestrado/modelo_foguete/model/engines/decision_tree_model.pkl'
     reg_model = joblib.load(reg_path)
-    reg_model = False
+    #reg_model = False
     cea_obj = ceaObj = CEA_Obj( oxName='LOX', fuelName='RP-1', pressure_units='MPa', cstar_units='m/s', temperature_units='K')
-
-
-    # engineParams = {"oxName": "LOX",
-    #                 "fuelName": "RP-1",
-    #                 "combPressure": 11.5 * 1e6,
-    #                 "MR": 2.8,
-    #                 "nozzleDiam": 0.23125,
-    #                 "eps": 180}
-
-    # engineParamsFirst = {"oxName": "LOX",
-    #                 "fuelName": "RP-1",
-    #                 "combPressure": 11.5 * 1e6,
-    #                 "MR": 2.8,
-    #                 "nozzleDiam": 0.23125,
-    #                 "eps": 25}
-
-    # payloadBayParams = {"payloadHeight": 6.7,
-    #                     "payloadRadius": 4.6/2,
-    #                     "payloadMass": 7500,
-    #                     "lowerStageRadius": 2.1,
-    #                     "lowerRocketSurfaceArea": 0} # 0 porque ainda nao temos esse valor
-
-    # upperStageStructureParams = {"oxName": "LOX",
-    #                              "fuelName": "RP1",
-    #                              "MR": 2.8,
-    #                              "tankPressure": 0.1,
-    #                              "radius": 2.1,
-    #                             } # 0 porque ainda nao temos esse valor
-    # lowerStageStructureParams = {"oxName": "LOX",
-    #                             "fuelName": "RP1",
-    #                             "MR": 2.8,
-    #                             "tankPressure": 0.1,
-    #                             "radius": 2.8,
-    #                         } # 0 porque ainda nao temos esse valor
 
 
     engineParams = {"oxName": "LOX",
                     "fuelName": "RP-1",
-                    "combPressure": 3.96769844e6,
-                    "MR": 4.31244790,
-                    "nozzleDiam": 4.31920087e-1,
-                    "eps": 8.40074954e1}
+                    "combPressure": 11.5 * 1e6,
+                    "MR": 2.8,
+                    "nozzleDiam": 0.23125,
+                    "eps": 180}
 
     engineParamsFirst = {"oxName": "LOX",
                     "fuelName": "RP-1",
-                    "combPressure": 2.44865031e6,
-                    "MR": 5.28717125,
-                    "nozzleDiam": 4.15087055e-1,
-                    "eps": 1.03948044e2}
+                    "combPressure": 11.5 * 1e6,
+                    "MR": 2.8,
+                    "nozzleDiam": 0.23125,
+                    "eps": 25}
 
     payloadBayParams = {"payloadHeight": 6.7,
                         "payloadRadius": 4.6/2,
-                        "payloadMass": 4850,
-                        "lowerStageRadius": 9.50135280,
+                        "payloadMass": 7500,
+                        "lowerStageRadius": 2.1,
                         "lowerRocketSurfaceArea": 0} # 0 porque ainda nao temos esse valor
 
     upperStageStructureParams = {"oxName": "LOX",
                                  "fuelName": "RP1",
-                                 "MR": 4.31244790,
+                                 "MR": 2.8,
                                  "tankPressure": 0.1,
-                                 "radius": 9.50135280,
+                                 "radius": 2.1,
                                 } # 0 porque ainda nao temos esse valor
     lowerStageStructureParams = {"oxName": "LOX",
                                 "fuelName": "RP1",
-                                "MR": 5.28717125,
+                                "MR": 2.8,
                                 "tankPressure": 0.1,
-                                "radius": 6.27899536,
+                                "radius": 2.8,
                             } # 0 porque ainda nao temos esse valor
+
+
+    # engineParams = {"oxName": "LOX",
+    #                 "fuelName": "RP-1",
+    #                 "combPressure": 3.96769844e6,
+    #                 "MR": 4.31244790,
+    #                 "nozzleDiam": 4.31920087e-1,
+    #                 "eps": 8.40074954e1}
+
+    # engineParamsFirst = {"oxName": "LOX",
+    #                 "fuelName": "RP-1",
+    #                 "combPressure": 2.44865031e6,
+    #                 "MR": 5.28717125,
+    #                 "nozzleDiam": 4.15087055e-1,
+    #                 "eps": 1.03948044e2}
+
+    # payloadBayParams = {"payloadHeight": 6.7,
+    #                     "payloadRadius": 4.6/2,
+    #                     "payloadMass": 4850,
+    #                     "lowerStageRadius": 9.50135280,
+    #                     "lowerRocketSurfaceArea": 0} # 0 porque ainda nao temos esse valor
+
+    # upperStageStructureParams = {"oxName": "LOX",
+    #                              "fuelName": "RP1",
+    #                              "MR": 4.31244790,
+    #                              "tankPressure": 0.1,
+    #                              "radius": 9.50135280,
+    #                             } # 0 porque ainda nao temos esse valor
+    # lowerStageStructureParams = {"oxName": "LOX",
+    #                             "fuelName": "RP1",
+    #                             "MR": 5.28717125,
+    #                             "tankPressure": 0.1,
+    #                             "radius": 6.27899536,
+    #                         } # 0 porque ainda nao temos esse valor
 
     time_start = time.time()
     for i in range(1000):
@@ -286,7 +286,7 @@ if __name__ == "__main__":
                                 )
 
         rocket_model.build_all()
-        rocket_model.print_all_parameters()
+        #rocket_model.print_all_parameters()
     time_end = time.time()
     print(f'Tempo: {time_end - time_start}')
     #rocket_model.print_all_parameters()

@@ -99,7 +99,7 @@ class Trainer:
             'estimator__kernel': ['rbf', 'linear'],
             'estimator__C': [1, 10, 100],
             'estimator__gamma': ['scale', 'auto'],
-            'estimator__max_iter': [1000]  # Limita o número de iterações
+            'estimator__max_iter': [10000]  # Limita o número de iterações
         }
 
         # Grid Search com validação cruzada
