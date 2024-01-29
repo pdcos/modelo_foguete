@@ -117,6 +117,9 @@ def fitness_func(parameters_list):
         return 0
     if rocket_model.firstStageEngine.thrustSea * 9 <= 1.3 * rocket_model.glow * 9.81: # Multiplicar pelo número de motores (9)
         return 0
+    # Caso o estágio inferior seja menor que o superior retorna 0
+    if rocket_model.firstStageStructure.radius < rocket_model.upperStageStructure.radius:
+        return 0
     if neg_value < 0:
         if neg_value > -100:
             return neg_value/100

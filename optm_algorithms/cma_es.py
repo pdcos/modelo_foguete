@@ -57,11 +57,7 @@ class CMA_ES():
         # Amostragem da população
         self.x_i = np.random.multivariate_normal(self.x_mean, (self.sigma ** 2) * self.C, size=self.lamb)
 
-        rows_to_delete = np.any(self.x_i > 1, axis=1)
-        self.x_i = self.x_i[~rows_to_delete]
-        rows_to_delete = np.any(self.x_i < 0, axis=1)
-        self.x_i = self.x_i[~rows_to_delete]
-
+        self.x_i = np.clip(self.x_i, 0, 1)
         self.f_x_i = self.fitness_func(self.x_i, self.value_ranges)
         self.fitness_calls_counter += 1
 
