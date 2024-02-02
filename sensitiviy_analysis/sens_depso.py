@@ -14,12 +14,19 @@ rocket_fitness = RocketFitness(bound_values, num_workers=4)
 random_values = np.random.rand(10,10)
 fitness_func_class = rocket_fitness.calc_fitness
 
-global_factor_list = np.linspace(1.05, 3.05, 3)
-local_factor_list = np.linspace(1.05, 3.05, 3)
-v_max = np.linspace(1,8,3)
+# global_factor_list = np.linspace(1.05, 3.05, 3)
+# local_factor_list = np.linspace(1.05, 3.05, 3)
+# v_max = np.linspace(1,8,3)
 
-mutation_rate = np.linspace(0.2, 0.9, 3)
-crossover_rate = np.linspace(0.2, 1, 3)
+# mutation_rate = np.linspace(0.2, 0.9, 3)
+# crossover_rate = np.linspace(0.2, 1, 3)
+
+# global_factor_list = np.array([1.0, 2.25, 3.5])
+# local_factor_list = np.array([1.0, 2.25, 3.5])
+# v_max = np.array([5.5, 7.75, 10])
+
+# mutation_rate = np.array([0.2, 0.4, 0.6, 0.8])
+# crossover_rate = np.array([0.5, 0.7, 0.9, 1])
 
 grid1, grid2, grid3, grid4, grid5 = np.meshgrid(global_factor_list, local_factor_list, v_max, mutation_rate, crossover_rate)
 

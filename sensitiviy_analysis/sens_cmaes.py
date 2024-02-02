@@ -18,15 +18,17 @@ random_values = np.random.rand(10,10)
 fitness_func_class = rocket_fitness.calc_fitness
 
 
-mi_list = [ 20,  60, 100, 140, 180, 220, 260, 300, 340, 380]
-sigma_list = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.5, 0.55, 0.6]
+#mi_list = [ 20,  60, 100, 140, 180, 220, 260, 300, 340, 380]
+#sigma_list = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.5, 0.55, 0.6]
 
-mi_list = [380]
-sigma_list = [0.6]
+mi_list = [1,2,3,4,5,10, 20, 100, 200, 300]
+sigma_list = [0.2, 0.25, 0.3, 0.35, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75]
 
 
 grid1, grid2 = np.meshgrid(mi_list, sigma_list)
 combinations = np.vstack((grid1.ravel(), grid2.ravel())).T
+
+print(combinations)
 
 def execute_sensitivity_analysis_cmaes(combinations, filename):
     
@@ -34,7 +36,9 @@ def execute_sensitivity_analysis_cmaes(combinations, filename):
     for row in tqdm(combinations):
         #try:
         mi = int(row[0])
-        sigma = row[1]
+        sigma = row[1] 
+
+        print(f"mi: {mi}, sigma: {sigma}")
         
         cmaes = CMA_ES(
             num_epochs=100,
@@ -45,7 +49,8 @@ def execute_sensitivity_analysis_cmaes(combinations, filename):
             fitness_func=fitness_func_class,
             eval_every=99,
             verbose=True,
-            sigma=sigma
+            sigma=sigma,
+            seed = 1,
         )
         best_solutions = cmaes.fit()
 
@@ -72,6 +77,7 @@ def execute_sensitivity_analysis_cmaes(combinations, filename):
         
     with open(filename, 'w') as fout:
         json.dump(simulations_list, fout)
+        ...
 
     return
 

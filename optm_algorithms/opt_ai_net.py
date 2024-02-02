@@ -72,6 +72,9 @@ class OptAiNet():
         self.fitness_calls_list = np.zeros(self.num_epochs)
         self.limit_fitness_calls = limit_fitness_calls
 
+        # inicializa total_exec_time
+        self.total_exec_time = 0
+
         # self.init_pop()
         # self.fitness_evaluation()
         # self.clone()
