@@ -52,6 +52,9 @@ class CMA_ES():
         self.min_mat = self.value_ranges.T[0, :]
         self.max_mat = self.value_ranges.T[1,:]
 
+        # Inicializa lista de tempos de execução
+        self.exec_time_list = np.zeros(self.num_epochs)
+
 
     def step(self):
         # Amostragem da população
@@ -103,6 +106,9 @@ class CMA_ES():
             self.curr_epoch = epoch
             self.step()
             self.callback()
+            # Atualiza tempo de execução
+            exec_time = time.time() - start_time
+            self.exec_time_list[epoch] = exec_time
         self.total_exec_time = time.time() - start_time
         print("--- %s seconds ---" % (self.total_exec_time))
         return self.best_indvs

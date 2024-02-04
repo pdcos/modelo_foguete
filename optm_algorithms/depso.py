@@ -66,6 +66,8 @@ class DEPSO():
         self.phi = self.global_factor + self.local_factor
         self.K = 2.0/(np.abs(2-self.phi - np.sqrt((self.phi**2)-(4*self.phi))))
 
+        # Initialize execution time list
+        self.exec_time_list = np.zeros(self.num_epochs)
 
         np.random.seed(seed=seed)
 
@@ -231,6 +233,9 @@ class DEPSO():
             self.selection()
             self.calculate_fitness()
             self.callback()
+            # Atualiza o tempo de execução
+            exec_time = time.time() - start_time
+            self.exec_time_list[epoch] = exec_time
         self.total_exec_time = time.time() - start_time
         print("--- %s seconds ---" % (self.total_exec_time))
         return self.pbest

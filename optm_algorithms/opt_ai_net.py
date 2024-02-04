@@ -75,6 +75,9 @@ class OptAiNet():
         # inicializa total_exec_time
         self.total_exec_time = 0
 
+        # Inicializa lista de tempos de execução
+        self.exec_time_list = np.zeros(self.num_epochs)
+
         # self.init_pop()
         # self.fitness_evaluation()
         # self.clone()
@@ -278,6 +281,8 @@ class OptAiNet():
             #     break
             self.add_newcomers()
             self.fitness_evaluation()
+            # Atualiza lista de tempos de execução
+            self.exec_time_list[self.curr_epoch] = time.time() - start_time
             if self.fitness_calls_counter >= self.limit_fitness_calls:
                 break
         self.total_exec_time = time.time() - start_time

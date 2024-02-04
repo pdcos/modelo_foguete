@@ -40,6 +40,9 @@ class DifferentialEvolutionAlgorithm():
         self.fitness_calls_counter = 0
         self.fitness_calls_list = np.zeros(self.num_epochs)
 
+        # Inicializa lista de tempos de execução
+        self.exec_time_list = np.zeros(self.num_epochs)
+
         np.random.seed(seed=seed)
 
     def init_pop(self):
@@ -108,6 +111,9 @@ class DifferentialEvolutionAlgorithm():
             self.crossover()
             self.selection()
             self.callback()
+            # Atualiza tempo de execução
+            exec_time = time.time() - start_time
+            self.exec_time_list[epoch] = exec_time
         self.total_exec_time = time.time() - start_time
         print("--- %s seconds ---" % (self.total_exec_time))
         return self.x_g
